@@ -132,7 +132,7 @@ export const DeleteMessage = async (req: AuthRequest, res: Response) => {
         if (!messageRecord.sentby?.equals(user._id.toString()))
             return SendError(res, "You are not authorised to delete this message!", 401);
 
-        messageRecord.deletedAt = new Date();
+        messageRecord.deletedAt = new Date().toISOString();
         await messageRecord.save();
 
         let channel = await ChannelModel.findById(messageRecord.channelId);
