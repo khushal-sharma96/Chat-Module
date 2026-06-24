@@ -10,12 +10,6 @@ const SignUp = async (req: Request, res: Response) => {
             email
         } = req.body;
 
-        return SendResponse(res, 200, {
-            firstname,
-            lastname,
-            password,
-            email
-        });
         password = await UserModel.hashPassword(password);
 
         const user = await UserModel.create({
@@ -24,6 +18,7 @@ const SignUp = async (req: Request, res: Response) => {
             password,
             email
         });
+        return SendResponse(res, 200, user);
 
     }
     catch (err: any) {
@@ -34,15 +29,14 @@ const SignUp = async (req: Request, res: Response) => {
 const Login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-        return SendResponse(res, 200, { userData: { email, password }, token: "#############" });
-        // const user = await UserModel.findOne({ email });
-        // if (user) {
-        //     const isValidPassword = await user.comparePassword(password);
-        //     if (isValidPassword) {
-        //         return SendResponse(res, 200, { userData: user, token: user.generateAuthToken() });
-        //     }
-        // }
-        // return SendError(res, "Invalid email or password!", 401);
+        const user = await UserModel.findOne({ email });
+        if (user) {
+            const isValidPassword = await user.comparePassword(password);
+            if (isValidPassword) {
+                return SendResponse(res, 200, { userData: user, token: user.generateAuthToken() });
+            }
+        }
+        return SendError(res, "Invalid email or password!", 401);
     }
     catch (err: any) {
         return SendError(res, err?.message);
