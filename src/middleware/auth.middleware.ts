@@ -6,8 +6,7 @@ import { AuthRequest } from '../interfaces';
 
 export default async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-        const token = req?.cookies?.token || req.headers.authorization;
-        const decodedData = await UserModel.decodeToken(token);
+        const decodedData = await UserModel.decodeToken(req);
         if (!decodedData)
             return SendError(res, "Unauthorised Access!", 401);
 

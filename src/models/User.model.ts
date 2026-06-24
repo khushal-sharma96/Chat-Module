@@ -49,6 +49,7 @@ Schema.statics.hashPassword = async (password) => {
 
 Schema.statics.decodeToken = async (req: Request) => {
     const token = req?.cookies?.token || req.headers.authorization;
+    console.log("Token", token);
     if (!token)
         return false;
     try {
