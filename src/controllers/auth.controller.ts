@@ -32,8 +32,9 @@ const Login = async (req: Request, res: Response) => {
         const user = await UserModel.findOne({ email }).select("+password");
         if (user) {
             const isValidPassword = await user.comparePassword(password);
+            const token = await user.generateAuthToken();
             if (isValidPassword) {
-                return SendResponse(res, 200, { userData: user, token: user.generateAuthToken() });
+                return SendResponse(res, 200, { userData: user, token });
             }
         }
         return SendError(res, "Invalid email or password!", 401);
