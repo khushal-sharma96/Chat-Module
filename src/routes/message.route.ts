@@ -9,12 +9,12 @@ Router.get("/all-clients", authMiddleware, RecipientList);
 /**
  * For sending the message
  */
-Router.get("/send-message", authMiddleware, SendMessage);
+Router.post("/send-message", authMiddleware, SendMessage);
 
 /**
  * To delete the sent message
  */
-Router.get("/delete-message", authMiddleware, DeleteMessage);
+Router.post("/delete-message", authMiddleware, DeleteMessage);
 
 /**
  * Function to mark the message as seen.
