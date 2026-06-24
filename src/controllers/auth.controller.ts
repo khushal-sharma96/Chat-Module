@@ -29,7 +29,7 @@ const SignUp = async (req: Request, res: Response) => {
 const Login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email }).select("+password");
         if (user) {
             const isValidPassword = await user.comparePassword(password);
             if (isValidPassword) {
