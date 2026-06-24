@@ -19,8 +19,8 @@ app.use(cors());
 DbConfig();
 Socket(server);
 
-app.use("/auth", AuthRoutes);
 app.use("/", MessageRouter);
+app.use("/auth", AuthRoutes);
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200).json({
