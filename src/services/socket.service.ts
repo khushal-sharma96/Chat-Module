@@ -8,7 +8,7 @@ export default (server: any) => {
     io = new Server(server);
 
     io.use((socket: any, next: (err?: ExtendedError) => void) => {
-
+        console.log(socket.handshake);
         if (socket.handshake.headers && socket.handshake.headers.authorization) {
             jwt.verify(
                 socket.handshake.headers.authorization,
