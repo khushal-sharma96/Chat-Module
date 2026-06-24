@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import jwt,{Secret } from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Request } from "express";
 import { IUser, IUserMethods, IUserModel } from "../interfaces";
@@ -28,7 +28,7 @@ const Schema = new mongoose.Schema<
         required: true,
         select: false,
     },
-    socketIds:Array
+    socketIds: Array,
 }, {
     timestamps: true
 });
@@ -39,6 +39,7 @@ Schema.methods.generateAuthToken = async function () {
 };
 
 Schema.methods.comparePassword = async function (password: string) {
+    console.log(password, this.password);
     return await bcrypt.compare(password, this.password);
 }
 

@@ -39,6 +39,7 @@ const Login = async (req: Request, res: Response) => {
         return SendError(res, "Invalid email or password!", 401);
     }
     catch (err: any) {
+        console.log(err);
         return SendError(res, err?.message);
     }
 }
