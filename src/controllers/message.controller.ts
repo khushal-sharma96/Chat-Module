@@ -3,9 +3,14 @@ import UserModel from "../models/User.model";
 import { SendResponse, SendError } from "../helpers/response.helper"
 import ChannelModel from "../models/Channel.model";
 import MessageModel from "../models/Message.model";
-import { AuthRequest } from '../interfaces';
+import { AuthRequest, IMessage, MessageDTO } from '../interfaces';
 import { Types } from "mongoose";
 
+import {
+    SendMessageEvent
+    , DeleteMessageEvent
+    , SeenMessageEvent
+} from "../services/socket.service";
 export const RecipientList = async (req: AuthRequest, res: Response) => {
     try {
         const user = req.user;
@@ -65,6 +70,11 @@ export const SendMessage = async (req: AuthRequest, res: Response) => {
             sentby: new Types.ObjectId(user._id.toString()),
         });
 
+        const receiptUser = await UserModel.findById(channel.senderId?.equals(user._id.toString()) ? channel.receiverId : channel.senderId);
+
+
+        SendMessageEvent(receiptUser ? receiptUser.socketIds : [], message);
+
         return SendResponse(res, 201, message, "Message sent successfully.");
     }
     catch (err: any) {
@@ -89,9 +99,14 @@ export const SeenMessage = async (req: AuthRequest, res: Response) => {
 
         let channel = await ChannelModel.findById(messageRecord.channelId);
 
+        if (!channel)
+            return SendError(res, "Invalid channel id!", 401);
+
         messageRecord.seenBy = [user._id];
         await messageRecord.save();
 
+        const receiptUser = await UserModel.findById(channel.senderId?.equals(user._id.toString()) ? channel.receiverId : channel.senderId);
+        SeenMessageEvent(receiptUser ? receiptUser.socketIds : [], messageRecord);
         return SendResponse(res, 201, messageRecord, "Message seen successfully.");
     }
     catch (err: any) {
@@ -119,6 +134,14 @@ export const DeleteMessage = async (req: AuthRequest, res: Response) => {
 
         messageRecord.deletedAt = new Date();
         await messageRecord.save();
+
+        let channel = await ChannelModel.findById(messageRecord.channelId);
+
+        if (!channel)
+            return SendError(res, "Invalid channel id!", 401);
+
+        const receiptUser = await UserModel.findById(channel.senderId?.equals(user._id.toString()) ? channel.receiverId : channel.senderId);
+        DeleteMessageEvent(receiptUser ? receiptUser.socketIds : [], messageRecord);
 
         return SendResponse(res, 201, messageRecord, "Message deleted successfully.");
     }

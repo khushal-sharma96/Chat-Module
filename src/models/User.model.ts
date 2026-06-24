@@ -59,4 +59,18 @@ Schema.statics.decodeToken = async (req: Request) => {
     }
 }
 
-export default mongoose.model<IUser, IUserModel>("User", Schema);
+const UserModel = mongoose.model<IUser, IUserModel>("User", Schema);
+export default UserModel;
+
+export const saveSocketId = async (socketId: string, userId: string) => {
+    try {
+        const user = await UserModel.findById(userId);
+        if (user) {
+            user.socketIds = [...user.socketIds, socketId];
+            user.save();
+        }
+    }
+    catch (err: any) {
+        console.log(err);
+    }
+}
