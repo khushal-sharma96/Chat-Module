@@ -36,7 +36,7 @@ export const SendMessage = async (req: AuthRequest, res: Response) => {
 
         let channel = null;
 
-        if (!messagePayload.channelId && !messagePayload.receiverid)
+        if (!messagePayload.channelId && !messagePayload.receiverId)
             return SendError(res, "Send either receiver id or channel id!", 401);
 
         if (!messagePayload.channelId && messagePayload.receiverId) {
