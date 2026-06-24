@@ -25,3 +25,6 @@ Router.get("/seen-message/:messageId", authMiddleware, SeenMessage);
  * Function to get all messages of the given chats
  */
 Router.get("/all-message/:channelId", authMiddleware, AllMessages);
+
+
+export default Router;
