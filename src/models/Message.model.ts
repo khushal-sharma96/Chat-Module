@@ -20,7 +20,7 @@ const Schema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "User"
     },
-    deletedAt: timeStamp
+    deletedAt: String
 }, {
     timestamps: true
 });
