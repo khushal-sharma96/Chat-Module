@@ -7,6 +7,7 @@ export interface IUser {
     lastname: string;
     email: string;
     password: string;
+    socketIds: [string];
 }
 
 export interface IUserMethods {

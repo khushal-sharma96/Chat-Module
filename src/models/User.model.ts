@@ -28,6 +28,7 @@ const Schema = new mongoose.Schema<
         required: true,
         select: false,
     },
+    socketIds:Array
 }, {
     timestamps: true
 });

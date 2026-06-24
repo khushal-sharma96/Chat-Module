@@ -3,26 +3,29 @@ import AuthRoutes from "./routes/auth.routes"
 import DbConfig from "./config/db.config"
 import cors from "cors";
 import dotenv from "dotenv";
-
+import Socket from "./services/socket.service"
+import http from "http";
 dotenv.config();
 
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(express.json());
 app.use(express.json());
 app.use(cors());
 
 DbConfig();
+Socket(server);
 
 app.use("/auth", AuthRoutes);
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200).json({
         status: true,
-        message: "Hello from the server!"
+        message: "Hello from the chat-server(Build by Khushal Sharma)!"
     });
 });
 
-export default app;
+export default server;
 
